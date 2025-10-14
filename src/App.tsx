@@ -1,11 +1,15 @@
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes/AppRouter';
+import { Toaster } from 'sonner';
 import './App.css';
 
 const App: React.FC = () => {
   return (
-      <div className="App">
-        <h1>Welcome to MedAlert</h1>
-      </div>
+    <Router>
+      <AppRoutes />
+      <Toaster position="top-right" richColors />
+    </Router>
   );
 };
 
