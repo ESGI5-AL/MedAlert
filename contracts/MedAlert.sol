@@ -4,9 +4,7 @@ pragma solidity >=0.8.2 <0.9.0;
 import "./Registration.sol";
 
 contract MedAlert {
-    
-    //STRUCTURES
-    
+     
     struct Medicine {
         string medicineId;
         string medicineName;
@@ -30,7 +28,6 @@ contract MedAlert {
     }
 
     //VARIABLES
-    
     address public owner;
     Registration public registrationContract;
     
@@ -44,7 +41,6 @@ contract MedAlert {
     mapping(address => mapping(string => bool)) public patientHasMedicine;
 
     //EVENEMENTS
-    
     event MedicineAdded(address indexed patientAddress, string medicineId, string medicineName);
     event SideEffectReported(uint256 indexed reportId, address indexed patientAddress, string medicineId);
     event SideEffectValidated(uint256 indexed reportId, address indexed doctorAddress, uint8 severity);
@@ -52,7 +48,6 @@ contract MedAlert {
     event AlertDeactivated(string indexed medicineId);
 
     //MODIFIER
-    
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this function");
         _;
@@ -74,14 +69,12 @@ contract MedAlert {
     }
 
     //CONSTRUCTOR
-    
     constructor(address _registrationContractAddress) {
         owner = msg.sender;
         registrationContract = Registration(_registrationContractAddress);
     }
 
     //PHARMACIE
-
     function addMedicine(
         address _patientAddress,
         string calldata _medicineId,
@@ -110,7 +103,6 @@ contract MedAlert {
     }
 
     //PATIENTS
-
     function reportSideEffect(
         string calldata _medicineId,
         string calldata _symptom
@@ -141,7 +133,6 @@ contract MedAlert {
     }
 
     //MeDECIN
-
     function validateSideEffect(
         uint256 _reportId,
         uint8 _severity
@@ -162,7 +153,6 @@ contract MedAlert {
     }
 
     //ALERTES
-
     function _checkAndTriggerAlert(string memory _medicineId) internal {
         uint256[] memory reports = sideEffectsByMedicine[_medicineId];
         uint256 validatedCount = 0;
@@ -221,7 +211,6 @@ contract MedAlert {
     }
 
     //LIRE
-
     function getMyMedicineHistory() external view onlyPatient returns (Medicine[] memory) {
         return medicineHistory[msg.sender];
     }
