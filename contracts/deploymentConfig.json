@@ -61,6 +61,6 @@
 
   "settings": {
     "alertThreshold": 3,
-    "description": "Number of validated side effect reports required to trigger an alert"
+    "description": "Number of validated side effect report required to trigger an alert"
   }
 }
