@@ -4,8 +4,6 @@ pragma solidity >=0.8.2 <0.9.0;
 
 contract Registration {
     
-    //VARIABLES
-    
     address public owner;
     
     address[] public doctorsList;
@@ -14,26 +12,22 @@ contract Registration {
     mapping(address => bool) public isDoctorAddress;
     mapping(address => bool) public isPharmacyAddress;
 
-    //ÉVÉNEMENTS
-    
+    //EVENEMENTS
     event DoctorAdded(address indexed doctorAddress);
     event PharmacyAdded(address indexed pharmacyAddress);
 
-    //MODIFIERS
-    
+    //MODIFIER
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this function");
         _;
     }
 
     //CONSTRUCTOR
-    
     constructor() {
         owner = msg.sender;
     }
 
     //AJOUTER
-
     function addDoctor(address _doctorAddress) external onlyOwner {
         require(_doctorAddress != address(0), "Invalid address");
         require(!isDoctorAddress[_doctorAddress], "Already a doctor");
@@ -57,7 +51,6 @@ contract Registration {
     }
 
     //VÉRIFIER
-
     function isDoctor(address _address) external view returns (bool) {
         return isDoctorAddress[_address];
     }
@@ -81,7 +74,6 @@ contract Registration {
     }
 
     //CONSULTER
-
     function getDoctorsList() external view returns (address[] memory) {
         return doctorsList;
     }
