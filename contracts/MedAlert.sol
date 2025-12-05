@@ -3,11 +3,6 @@ pragma solidity >=0.8.2 <0.9.0;
 
 import "./Registration.sol";
 
-/**
- * @title MedAlert
- * @dev Gère les médicaments, signalements et alertes
- */
-
 contract MedAlert {
     
     //STRUCTURES
@@ -280,7 +275,6 @@ contract MedAlert {
     }
 
     //ADMIN
-
     function setAlertThreshold(uint256 _newThreshold) external onlyOwner {
         require(_newThreshold > 0, "Threshold must be greater than 0");
         ALERT_THRESHOLD = _newThreshold;
