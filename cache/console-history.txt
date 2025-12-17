@@ -1,0 +1,30 @@
+await medAlert.getMedicineCount("0x2ed6C20297C16311b7ca07eDc11A6f16BCBB544C")
+await medAlert.getMedicineCount("0x2102ede89aea7b12b1fc20867d92a9cc85dadb72")
+await medAlert.getAlertThreshold()
+await registration.getPharmaciesList()
+await registration.getDoctorsList()
+await medAlert.getMedicineCount("0x2ed6C20297C16311b7ca07eDc11A6f16BCBB544C"); // Patient Sonia
+await medAlert.getMedicineCount("0x2102ede89aea7b12b1fc20867d92a9cc85dadb72"); // Patient Camillia
+await medAlert.getAlertThreshold();
+await registration.getPharmaciesCount();
+await registration.getDoctorsCount();
+const medAlert = await ethers.getContractAt("MedAlert", deployments.contracts.MedAlert);
+const registration = await ethers.getContractAt("Registration", deployments.contracts.Registration);
+const deployments = require("./deployments.localhost.json");
+const { ethers } = await hre.network.connect();
+const hre = await import("hardhat");
+await medAlert.getMedicineCount("0x2ed6C20297C16311b7ca07eDc11A6f16BCBB544C");
+await medAlert.getMedicineCount("0x2102ede89aea7b12b1fc20867d92a9cc85dadb72");
+const medAlert = await ethers.getContractAt("MedAlert", deployments.contracts.MedAlert);
+const deployments = require("./deployments.localhost.json");
+const { ethers } = connection;
+const connection = await hre.network.connect();
+const hre = await import("hardhat");
+.exit 
+medAlert.interface.getFunction("addMedicine").format()
+await medAlert.getMedicineCount("0x2ed6C20297C16311b7ca07eDc11A6f16BCBB544C"); // Patient Sonia
+await medAlert.getMedicineCount("0x2102ede89aea7b12b1fc20867d92a9cc85dadb72"); // Patient Camillia
+await medAlert.getAlertThreshold();
+await registration.getPharmaciesCount();
+await registration.getDoctorsCount();
+const medAlert = await ethers.getContractAt("MedAlert", deployments.contracts.MedAlert);

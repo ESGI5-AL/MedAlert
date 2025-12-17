@@ -76,3 +76,65 @@ https://ui.shadcn.com/docs/installation
 [React-url]: https://reactjs.org/
 [Tailwind.css]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
 [Tailwind-url]: https://tailwindcss.com/
+``
+
+
+## Smart Contract Deployment
+
+### Contracts
+
+| Contract | Purpose |
+|----------|---------|
+| `Registration.sol` | Role management (doctors, pharmacies, patients) |
+| `MedAlert.sol` | Medical alert logic (medicines, thresholds, side-effect reporting) |
+
+### Tech Stack
+
+Hardhat 3 | Ethers v6 | Solidity 0.8.x
+
+> Hardhat 3 does not inject `ethers` globally. Use: `const { ethers } = await hre.network.connect();`
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `scripts/deploy.js` | Deploys contracts, seeds data |
+| `seedData.json` | Initial state (doctors, pharmacies, medicines, settings) |
+| `deployments.localhost.json` | Auto-generated deployment info |
+
+### Local Deployment
+
+**Terminal 1** – Start node:
+
+```bash
+npx hardhat node
+```
+
+**Terminal 2** – Deploy & seed:
+
+```bash
+npx hardhat run scripts/deploy.js --network localhost
+```
+
+### Verify Deployment
+
+```bash
+npx hardhat console --network localhost
+```
+
+```js
+const hre = await import("hardhat");
+const { ethers } = await hre.network.connect();
+const deployments = require("./deployments.localhost.json");
+
+const registration = await ethers.getContractAt("Registration", deployments.contracts.Registration);
+const medAlert = await ethers.getContractAt("MedAlert", deployments.contracts.MedAlert);
+
+await registration.getDoctorsCount();
+await medAlert.getAlertThreshold();
+```
+
+### Notes
+
+- **Localhost**: Pharmacy accounts are impersonated for seeding
+- **Other networks**: Medicine seeding requires pharmacy private keys
