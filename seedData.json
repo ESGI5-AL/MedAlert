@@ -1,0 +1,66 @@
+{
+  "network": "ethereum_sepolia",
+  "contractOwner": "0x1a9d215e2f80583617660d88e085acdcb24e8b03",
+  
+  "doctors": [
+    {
+      "address": "0x03a8A22f098Fb48410ae92461Cd947ED9C84eBD5",
+      "name": "Dr. Selena Chabane"
+    }
+  ],
+
+  "pharmacies": [
+    {
+      "address": "0x1a9d215e2f80583617660d88e085acdcb24e8b03",
+      "name": "Central Pharmacy Paris"
+    },
+    {
+      "address": "0x64f98c25eb052b455599460bd418CB3e16FFC922",
+      "name": "Denisa Pharmacy"
+    }
+  ],
+
+  "testPatients": [
+    {
+      "address": "0x2102ede89aea7b12b1fc20867d92a9cc85dadb72",
+      "name": "Patient Camillia"
+    },
+    {
+      "address": "0x2ed6C20297C16311b7ca07eDc11A6f16BCBB544C",
+      "name": "Patient Sonia"
+    }
+  ],
+
+  "medicines": [
+    {
+      "medicineId": "MED001",
+      "name": "Paracetamol 500mg",
+      "description": "Analgesic and antipyretic"
+    },
+    {
+      "medicineId": "MED002",
+      "name": "Ibuprofen 200mg",
+      "description": "Non-steroidal anti-inflammatory drug"
+    },
+    {
+      "medicineId": "MED003",
+      "name": "Aspirin 100mg",
+      "description": "Anticoagulant and analgesic"
+    },
+    {
+      "medicineId": "MED004",
+      "name": "Amoxicillin 500mg",
+      "description": "Penicillin antibiotic"
+    },
+    {
+      "medicineId": "MED005",
+      "name": "Omeprazole 20mg",
+      "description": "Proton pump inhibitor"
+    }
+  ],
+
+  "settings": {
+    "alertThreshold": 3,
+    "description": "Number of validated side effect report required to trigger an alert"
+  }
+}
