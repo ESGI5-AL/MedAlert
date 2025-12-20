@@ -1,128 +1,174 @@
-# MedAlert - Smart Medical Passport & Community Alert Network
+# MedAlert - Passeport Médical Intelligent & Réseau d'Alerte Communautaire
 
-A decentralized real-time alert network for medication side effects, combining blockchain and public health to save lives through transparency.
+Un réseau d'alerte décentralisé en temps réel pour les effets secondaires des médicaments, combinant blockchain et santé publique pour sauver des vies grâce à la transparence.
 
-## Project Overview
+---
 
-MedAlert is a revolutionary pharmacovigilance platform that leverages blockchain technology to create a transparent, immutable, and patient-centered drug safety monitoring system. By combining the power of blockchain with medical expertise, MedAlert addresses critical flaws in current centralized pharmacovigilance systems. <br>
 
-### The Problem
+## Vue d'ensemble du projet
 
-Current drug surveillance systems have critical failures that endanger public health:
+MedAlert est une plateforme révolutionnaire de pharmacovigilance qui exploite la technologie blockchain pour créer un système de surveillance de la sécurité des médicaments transparent, immuable et centré sur le patient. En combinant la puissance de la blockchain avec l'expertise médicale, MedAlert répond aux défaillances critiques des systèmes de pharmacovigilance centralisés actuels.
 
-- Dangerous Delays: Serious side effects are detected too late, sometimes after years of widespread use
-- Risky Centralization: Pharmaceutical companies can influence or suppress reports, compromising system objectivity
-- Uninformed Patients: No real-time alert system exists to warn users of at-risk medications
-- Massive Under-reporting: 95% of side effects are never reported to health authorities
+---
 
-**Result**: Thousands of lives threatened by the opacity of current pharmacovigilance systems.
+## Le problème
 
-## Our Solution
+Les systèmes actuels de surveillance des médicaments présentent des défaillances critiques qui mettent en danger la santé publique:
 
-MedAlert proposes a decentralized and immutable alert network with four key components:
-1. Evolving NFT Passport : <br>
-Each patient owns a unique NFT that automatically tracks all their medication purchases from pharmacies.
+- **Retards dangereux** : Les effets secondaires graves sont détectés trop tard, parfois après des années d'utilisation généralisée
+- **Centralisation risquée** : Les entreprises pharmaceutiques peuvent influencer ou supprimer les rapports, compromettant l'objectivité du système
+- **Patients non informés** : Aucun système d'alerte en temps réel n'existe pour avertir les utilisateurs de médicaments à risque
+- **Sous-déclaration massive** : 95% des effets secondaires ne sont jamais signalés aux autorités sanitaires
 
-2. Decentralized Reporting : <br>
-Patients anonymously report side effects directly on the blockchain, without intermediaries.
+**Résultat** : Des milliers de vies menacées par l'opacité des systèmes actuels de pharmacovigilance.
 
-3. Medical Validation : <br>
-Network of certified physicians validating reports via transparent and verifiable smart contracts.
+---
 
-4. Instant Alerts : <br>
-Immediate notification of all affected patients when a critical threshold is reached.
+## Notre solution
 
-## Team
+MedAlert propose un réseau d'alerte décentralisé et immuable avec quatre composantes clés :
+
+### 1. Passeport NFT évolutif
+Chaque patient possède un NFT unique qui suit automatiquement tous ses achats de médicaments en pharmacie.
+
+### 2. Signalement décentralisé
+Les patients signalent anonymement les effets secondaires directement sur la blockchain, sans intermédiaires.
+
+### 3. Validation médicale
+Réseau de médecins certifiés validant les rapports via des smart contracts transparents et vérifiables.
+
+### 4. Alertes instantanées
+Notification immédiate de tous les patients affectés lorsqu'un seuil critique est atteint.
+
+---
+
+## 👥 Équipe
+
+**Promotion 5AL1**
 
 - HAMMOU Camillia
 - DUDAS Denisa
 - ALOUI Sonia
 - CHABANE Celina
 
--> 5AL1
+---
 
-## How to run our project
+## Installation et démarrage
 
-### Project setup
-```bash
-$ npm install
-```
-### Compile and run the project
-```bash
-$ npm start
-```
+### Prérequis
 
-### How to use shadcn/ui components
+- Node.js (v16 ou supérieur)
+- npm ou yarn
+- MetaMask (pour l'interaction avec la blockchain)
 
-To add a component use the command below with the name of the component you want to add.
+### Installation du projet
 
 ```bash
-$ npx shadcn@latest add componentName
+npm install
 ```
 
-exemple :
+### Compilation et exécution du projet
+
 ```bash
-$ npx shadcn@latest add breadcrumb
+npm start
 ```
 
+Le projet sera accessible à l'adresse : `http://localhost:3000`
 
-checkout the doc:
-https://ui.shadcn.com/docs/installation
+---
 
-## Built with
-[![React][React.js]][React-url] [![Tailwind CSS][Tailwind.css]][Tailwind-url]
+## Utilisation des composants shadcn/ui
+
+Pour ajouter un composant, utilisez la commande ci-dessous avec le nom du composant souhaité :
+
+```bash
+npx shadcn@latest add nomDuComposant
+```
+
+**Exemple** :
+
+```bash
+npx shadcn@latest add breadcrumb
+```
+
+Consultez la documentation complète : [https://ui.shadcn.com/docs/installation](https://ui.shadcn.com/docs/installation)
+
+---
+
+## Technologies utilisées
+
+### Frontend
+
+[![React][React.js]][React-url]
+[![Tailwind CSS][Tailwind.css]][Tailwind-url]
+
+- **React.js** - Framework JavaScript pour l'interface utilisateur
+- **Tailwind CSS** - Framework CSS utilitaire
+- **shadcn/ui** - Composants UI réutilisables
+- **Lucide React** - Icônes
+
+### Blockchain
+
+- **Hardhat 3** - Environnement de développement Ethereum
+- **Ethers v6** - Bibliothèque JavaScript pour interagir avec Ethereum
+- **Solidity 0.8.x** - Langage de programmation pour smart contracts
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Tailwind.css]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
 [Tailwind-url]: https://tailwindcss.com/
-``
+
+---
+
+## Déploiement des Smart Contracts
+
+### Contrats
+
+| Contrat | Objectif |
+|---------|----------|
+| `Registration.sol` | Gestion des rôles (médecins, pharmacies, patients) |
+| `MedAlert.sol` | Logique d'alerte médicale (médicaments, seuils, signalement d'effets secondaires) |
 
 
-## Smart Contract Deployment
+> ⚠️ **Note importante** : Hardhat 3 n'injecte pas `ethers` globalement. Utilisez : `const { ethers } = await hre.network.connect();`
 
-### Contracts
+### Fichiers clés
 
-| Contract | Purpose |
-|----------|---------|
-| `Registration.sol` | Role management (doctors, pharmacies, patients) |
-| `MedAlert.sol` | Medical alert logic (medicines, thresholds, side-effect reporting) |
+| Fichier | Objectif |
+|---------|----------|
+| `scripts/deploy.js` | Déploie les contrats et initialise les données |
+| `seedData.json` | État initial (médecins, pharmacies, médicaments, paramètres) |
+| `deployments.localhost.json` | Informations de déploiement auto-générées |
 
-### Tech Stack
+### Déploiement local
 
-Hardhat 3 | Ethers v6 | Solidity 0.8.x
+#### Étape 1 : Démarrer le nœud local
 
-> Hardhat 3 does not inject `ethers` globally. Use: `const { ethers } = await hre.network.connect();`
-
-### Key Files
-
-| File | Purpose |
-|------|---------|
-| `scripts/deploy.js` | Deploys contracts, seeds data |
-| `seedData.json` | Initial state (doctors, pharmacies, medicines, settings) |
-| `deployments.localhost.json` | Auto-generated deployment info |
-
-### Local Deployment
-
-**Terminal 1** – Start node:
+**Terminal 1** – Démarrer le nœud Hardhat :
 
 ```bash
 npx hardhat node
 ```
 
-**Terminal 2** – Deploy & seed:
+#### Étape 2 : Déployer et initialiser
+
+**Terminal 2** – Déployer et charger les données :
 
 ```bash
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-### Verify Deployment
+### Vérification du déploiement
+
+Ouvrez la console Hardhat :
 
 ```bash
 npx hardhat console --network localhost
 ```
 
-```js
+Exécutez les commandes suivantes pour vérifier :
+
+```javascript
 const hre = await import("hardhat");
 const { ethers } = await hre.network.connect();
 const deployments = require("./deployments.localhost.json");
@@ -134,7 +180,19 @@ await registration.getDoctorsCount();
 await medAlert.getAlertThreshold();
 ```
 
-### Notes
+### Notes importantes
 
-- **Localhost**: Pharmacy accounts are impersonated for seeding
-- **Other networks**: Medicine seeding requires pharmacy private keys
+- **Réseau localhost** : Les comptes des pharmacies sont simulés pour l'initialisation
+- **Autres réseaux** : L'initialisation des médicaments nécessite les clés privées des pharmacies
+
+> ⚠️ **Attention** :  Il faut ajouter un réseaux local Hardhat pour pouvoir se connecer correctement avec son wallet
+
+Pour faire ceci, connectez-vous à votre wallet et ajouter un nouveau réseaux personnalisé. <br>
+Completez le ainsi: <br> <br>
+Nom : Hardhat local <br>
+Default RPC URL : 127.0.0.1:8545 <br>
+Chain id: 31337 <br>
+Currency: ETH <br>
+
+---
+

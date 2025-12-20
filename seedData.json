@@ -1,7 +1,7 @@
 {
-  "network": "ethereum_sepolia",
+  "network": "localhost",
   "contractOwner": "0x1a9d215e2f80583617660d88e085acdcb24e8b03",
-  
+
   "doctors": [
     {
       "address": "0x03a8A22f098Fb48410ae92461Cd947ED9C84eBD5",

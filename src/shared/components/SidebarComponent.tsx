@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Home, Bell, Settings } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Home, Bell, Settings, LogOut } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -13,16 +13,22 @@ import {
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
+import { Button } from "@/shared/components/ui/button";
 import { useSidebarContext } from '../contexts/SidebarContext';
+import { useWeb3 } from '@/contexts/Web3Context';
 import logo from '@/assets/images/logo.svg';
+
 const iconMap: Record<string, React.ReactNode> = {
   Home: <Home size={16} />,
   Bell: <Bell size={16} />,
   Settings: <Settings size={16} />,
 };
+
 import { useSidebar } from "@/shared/components/ui/sidebar";
 
 export const SidebarComponent: React.FC = () => {
+  const navigate = useNavigate();
+  const { disconnectWallet, account } = useWeb3();
   const {
     user,
     getUserName,
@@ -30,9 +36,13 @@ export const SidebarComponent: React.FC = () => {
     navigationLinks,
     isLinkActive
   } = useSidebarContext();
-
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+
+  const handleDisconnect = () => {
+    disconnectWallet();
+    navigate('/login');
+  };
 
   return (
     <Sidebar className="border-r bg-[var(--sidebar-primary)]" collapsible="icon">
@@ -75,22 +85,39 @@ export const SidebarComponent: React.FC = () => {
       {/* User Profile Footer */}
       <SidebarFooter className="border-t bg-gray-50/50">
         {user ? (
-          <div className={`flex items-center p-3 ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
-            <Avatar className="h-9 w-9 flex-shrink-0">
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                {getUserInitials()}
-              </AvatarFallback>
-            </Avatar>
-            {!isCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
-                  {getUserName()}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {user.email}
-                </p>
-              </div>
-            )}
+          <div className="space-y-2 p-3">
+            {/* User Info */}
+            <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+              <Avatar className="h-9 w-9 flex-shrink-0">
+                <AvatarFallback className="bg-primary text-primary-foreground">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {getUserName()}
+                  </p>
+                  {account && (
+                    <p className="text-xs text-muted-foreground truncate font-mono">
+                      {account.slice(0, 6)}...{account.slice(-4)}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Disconnect Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDisconnect}
+              className={`w-full ${isCollapsed ? 'px-2' : 'justify-start'}`}
+              title={isCollapsed ? "Se Déconnecter" : undefined}
+            >
+              <LogOut size={16} className={isCollapsed ? '' : 'mr-2'} />
+              {!isCollapsed && <span>Se Déconnecter</span>}
+            </Button>
           </div>
         ) : (
           <div className={`flex items-center p-3 ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
