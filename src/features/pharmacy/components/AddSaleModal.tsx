@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { toast } from 'sonner';
-import seedData from '../../../../../../seedData.json';
+import seedData from '../../../../seedData.json';
 import { Loader2 } from 'lucide-react';
 
 const MEDICINES = seedData.medicines;

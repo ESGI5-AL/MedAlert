@@ -7,7 +7,7 @@ import { useWeb3 } from '@/contexts/Web3Context';
 import { AlertCard } from '../components/AlertCard';
 import type { MedicineWithAlerts, SideEffectDetail } from '../types/alerts.types';
 import { toast } from 'sonner';
-import seedData from '../../../../../../seedData.json';
+import seedData from '../../../../seedData.json';
 
 const AlertsPage: React.FC = () => {
   const { medAlertContract, account } = useWeb3();

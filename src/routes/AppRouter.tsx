@@ -2,14 +2,14 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from '@/shared/pages/HomePage';
 import AuthPage from '@/features/auth/pages/AuthPage';
 import NotFoundPage from '@/shared/pages/NotFoundPage';
-import AdminDashboard from '@/features/auth/pages/admin/pages/AdminDashboard';
+import AdminDashboard from '@/features/admin/pages/AdminDashboard';
 import { Web3Provider } from '@/contexts/Web3Context';
-import DoctorDashboard from '@/features/auth/pages/doctor/pages/DoctorDashboard';
-import PharmacyDashboard from '@/features/auth/pages/pharmacy/pages/PharmacyDashboard';
-import PatientDashboard from '@/features/auth/pages/patient/pages/PatientDashboard';
+import DoctorDashboard from '@/features/doctor/pages/DoctorDashboard';
+import PharmacyDashboard from '@/features/pharmacy/pages/PharmacyDashboard';
+import PatientDashboard from '@/features/patient/pages/PatientDashboard';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
-import SalesPage from '@/features/auth/pages/pharmacy/pages/SalesPage';
-import AlertsPage from '@/features/auth/pages/pharmacy/pages/AlertPage';
+import SalesPage from '@/features/pharmacy/pages/SalesPage';
+import AlertsPage from '@/features/pharmacy/pages/AlertPage';
 
 function AppRoutes() {
   return (
