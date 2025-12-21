@@ -137,7 +137,8 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children, role
 
     if (role === 'pharmacist') {
       roleSpecificLinks.push(
-        { to: '/pharmacy/sales', label: 'Délivrances', icon: 'Pill', isClickable: true }
+        { to: '/pharmacy/sales', label: 'Délivrances', icon: 'Pill', isClickable: true },
+        { to: '/pharmacy/alerts', label: 'Alertes', icon: 'TriangleAlert', isClickable: true }
       );
     }
 

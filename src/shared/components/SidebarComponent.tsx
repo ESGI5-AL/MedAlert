@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Home, Pill, Bell, Settings, LogOut, FileText, AlertTriangle, ClipboardList, Users, PlusCircle } from 'lucide-react';
+import { Home, Pill, Bell, Settings, LogOut, FileText, AlertTriangle, ClipboardList, Users, PlusCircle, TriangleAlert } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +23,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Home: <Home size={16} />,
   Bell: <Bell size={16} />,
   Pill: <Pill size={16} />,
+  TriangleAlert: <TriangleAlert size={16} />,
   Settings: <Settings size={16} />,
   FileText: <FileText size={16} />,
   AlertTriangle: <AlertTriangle size={16} />,

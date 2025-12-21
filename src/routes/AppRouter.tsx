@@ -9,6 +9,7 @@ import PharmacyDashboard from '@/features/auth/pages/pharmacy/pages/PharmacyDash
 import PatientDashboard from '@/features/auth/pages/patient/pages/PatientDashboard';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import SalesPage from '@/features/auth/pages/pharmacy/pages/SalesPage';
+import AlertsPage from '@/features/auth/pages/pharmacy/pages/AlertPage';
 
 function AppRoutes() {
   return (
@@ -45,6 +46,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['PHARMACY']}>
               <SalesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pharmacy/alerts"
+          element={
+            <ProtectedRoute allowedRoles={['PHARMACY']}>
+              <AlertsPage />
             </ProtectedRoute>
           }
         />
