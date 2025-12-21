@@ -1,19 +1,22 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useWeb3 } from '@/contexts/Web3Context';
+
+import seedData from '../../../seedData.json';
 
 interface User {
-  id: string | number;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
+  id: string;
+  name: string;
+  address: string;
   role: 'admin' | 'patient' | 'doctor' | 'pharmacist';
 }
 
 interface NavigationLink {
-  to: string;
+  to?: string;
   label: string;
   icon: string;
+  isClickable?: boolean;
 }
 
 interface SidebarContextType {
@@ -35,49 +38,114 @@ interface SidebarProviderProps {
 export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children, role }) => {
   const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
+  const { account, role: web3Role } = useWeb3();
 
   useEffect(() => {
-    // Mock user pour l'instant
-    const mockUser: User = {
-      id: '1',
-      firstName: 'Admin',
-      lastName: 'User',
-      email: 'admin@medalert.com',
-      role: role
-    };
+    if (!account) {
+      setUser(null);
+      return;
+    }
 
-    setUser(mockUser);
-  }, [role]);
+    let userData: User | null = null;
+    const address = account.toLowerCase();
+
+    if (seedData.contractOwner?.toLowerCase() === address) {
+      userData = {
+        id: account,
+        name: 'Contract Owner',
+        address: account,
+        role: 'admin'
+      };
+    }
+    else if (seedData.doctors) {
+      const doctor = seedData.doctors.find(
+        d => d.address?.toLowerCase() === address
+      );
+      if (doctor) {
+        userData = {
+          id: account,
+          name: doctor.name || 'Doctor',
+          address: account,
+          role: 'doctor'
+        };
+      }
+    }
+
+    if (!userData && seedData.pharmacies) {
+      const pharmacy = seedData.pharmacies.find(
+        p => p.address?.toLowerCase() === address
+      );
+      if (pharmacy) {
+        userData = {
+          id: account,
+          name: pharmacy.name || 'Pharmacy',
+          address: account,
+          role: 'pharmacist'
+        };
+      }
+    }
+
+    if (!userData && seedData.testPatients) {
+      const patient = seedData.testPatients.find(
+        p => p.address?.toLowerCase() === address
+      );
+      if (patient) {
+        userData = {
+          id: account,
+          name: patient.name || 'Patient',
+          address: account,
+          role: 'patient'
+        };
+      }
+    }
+
+    if (!userData) {
+      userData = {
+        id: account,
+        name: `Patient ${account.slice(0, 6)}`,
+        address: account,
+        role: 'patient'
+      };
+    }
+
+    setUser(userData);
+  }, [account, web3Role]);
 
   const getUserName = () => {
     if (!user) return 'User';
-    if (user.firstName || user.lastName) {
-      return `${user.firstName || ''} ${user.lastName || ''}`.trim();
-    }
-    return user.email?.split('@')[0] || `User${user.id}`;
+    return user.name;
   };
 
   const getUserInitials = () => {
-    if (!user) return '?';
-    if (user.firstName && user.lastName) {
-      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
-    } else if (user.firstName) {
-      return user.firstName[0].toUpperCase();
-    } else if (user.lastName) {
-      return user.lastName[0].toUpperCase();
+    if (!user || !user.name) return '?';
+
+    const nameParts = user.name.trim().split(' ');
+
+    if (nameParts.length >= 2) {
+      return `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase();
+    } else if (nameParts.length === 1 && nameParts[0].length > 0) {
+      return nameParts[0].slice(0, 2).toUpperCase();
     }
-    return user.email?.[0]?.toUpperCase() || '?';
+
+    return '?';
   };
 
   const getNavigationLinks = (): NavigationLink[] => {
     const roleSpecificLinks = [
-      { to: `/${role}`, label: 'Dashboard', icon: 'Home' }
+      { to: `/${role}`, label: 'Dashboard', icon: 'Home', isClickable: true }
     ];
 
-    const commonLinks = [
-      { to: `/${role}/notifications`, label: 'Notifications', icon: 'Bell' },
-      { to: `/${role}/settings`, label: 'Settings', icon: 'Settings' }
-    ];
+    if (role === 'pharmacist') {
+      roleSpecificLinks.push(
+        { to: '/pharmacy/sales', label: 'Délivrances', icon: 'Pill', isClickable: true },
+        { to: '/pharmacy/alerts', label: 'Alertes', icon: 'TriangleAlert', isClickable: true }
+      );
+    }
+
+    const commonLinks: NavigationLink[] = [
+    { label: 'Notifications', icon: 'Bell', isClickable: false },
+    { label: 'Paramètres', icon: 'Settings', isClickable: false }
+  ];
 
     return [...roleSpecificLinks, ...commonLinks];
   };
