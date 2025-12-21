@@ -4,7 +4,7 @@ pragma solidity >=0.8.2 <0.9.0;
 import "./Registration.sol";
 
 contract MedAlert {
-     
+
     struct Medicine {
         string medicineId;
         string medicineName;
@@ -30,10 +30,10 @@ contract MedAlert {
     //VARIABLES
     address public owner;
     Registration public registrationContract;
-    
+
     uint256 public nextReportId = 1;
     uint256 public ALERT_THRESHOLD = 3;
-    
+
     mapping(address => Medicine[]) public medicineHistory;
     mapping(uint256 => SideEffect) public sideEffects;
     mapping(string => uint256[]) public sideEffectsByMedicine;
@@ -41,7 +41,7 @@ contract MedAlert {
     mapping(address => mapping(string => bool)) public patientHasMedicine;
 
     //EVENEMENTS
-    event MedicineAdded(address indexed patientAddress, string medicineId, string medicineName);
+    event MedicineAdded(address indexed patientAddress, string medicineId, string medicineName, uint256 quantity);
     event SideEffectReported(uint256 indexed reportId, address indexed patientAddress, string medicineId);
     event SideEffectValidated(uint256 indexed reportId, address indexed doctorAddress, uint8 severity);
     event AlertTriggered(string indexed medicineId, uint256 alertCount);
@@ -99,7 +99,7 @@ contract MedAlert {
         medicineHistory[_patientAddress].push(newMedicine);
         patientHasMedicine[_patientAddress][_medicineId] = true;
 
-        emit MedicineAdded(_patientAddress, _medicineId, _medicineName);
+        emit MedicineAdded(_patientAddress, _medicineId, _medicineName, _quantity);
     }
 
     //PATIENTS
@@ -138,7 +138,7 @@ contract MedAlert {
         uint8 _severity
     ) external onlyDoctor {
         require(_severity >= 1 && _severity <= 10, "Severity must be between 1 and 10");
-        
+
         SideEffect storage report = sideEffects[_reportId];
         require(report.reportId != 0, "Report does not exist");
         require(!report.isValidated, "Report already validated");
@@ -170,19 +170,19 @@ contract MedAlert {
 
     function _triggerAlert(string memory _medicineId, uint256 _alertCount) internal {
         uint256[] memory reports = sideEffectsByMedicine[_medicineId];
-        
+
         for (uint i = 0; i < reports.length; i++) {
             address patientAddr = sideEffects[reports[i]].patientAddress;
-            
+
             bool alreadyAlerting = false;
             for (uint j = 0; j < activeAlerts[patientAddr].length; j++) {
-                if (keccak256(abi.encodePacked(activeAlerts[patientAddr][j])) == 
+                if (keccak256(abi.encodePacked(activeAlerts[patientAddr][j])) ==
                     keccak256(abi.encodePacked(_medicineId))) {
                     alreadyAlerting = true;
                     break;
                 }
             }
-            
+
             if (!alreadyAlerting) {
                 activeAlerts[patientAddr].push(_medicineId);
             }
@@ -193,12 +193,12 @@ contract MedAlert {
 
     function deactivateAlert(string calldata _medicineId) external onlyOwner {
         uint256[] memory reports = sideEffectsByMedicine[_medicineId];
-        
+
         for (uint i = 0; i < reports.length; i++) {
             address patientAddr = sideEffects[reports[i]].patientAddress;
-            
+
             for (uint j = 0; j < activeAlerts[patientAddr].length; j++) {
-                if (keccak256(abi.encodePacked(activeAlerts[patientAddr][j])) == 
+                if (keccak256(abi.encodePacked(activeAlerts[patientAddr][j])) ==
                     keccak256(abi.encodePacked(_medicineId))) {
                     activeAlerts[patientAddr][j] = activeAlerts[patientAddr][activeAlerts[patientAddr].length - 1];
                     activeAlerts[patientAddr].pop();
@@ -255,7 +255,7 @@ contract MedAlert {
 
     function hasAlert(address _patientAddress, string calldata _medicineId) external view returns (bool) {
         for (uint i = 0; i < activeAlerts[_patientAddress].length; i++) {
-            if (keccak256(abi.encodePacked(activeAlerts[_patientAddress][i])) == 
+            if (keccak256(abi.encodePacked(activeAlerts[_patientAddress][i])) ==
                 keccak256(abi.encodePacked(_medicineId))) {
                 return true;
             }
