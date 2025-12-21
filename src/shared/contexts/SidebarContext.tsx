@@ -142,6 +142,12 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children, role
       );
     }
 
+     if (role === 'patient') {
+      roleSpecificLinks.push(
+        { to: '/patient/passport', label: 'Passeport Médical', icon: 'Fingerprint', isClickable: true }
+      );
+    }
+
     const commonLinks: NavigationLink[] = [
     { label: 'Notifications', icon: 'Bell', isClickable: false },
     { label: 'Paramètres', icon: 'Settings', isClickable: false }
