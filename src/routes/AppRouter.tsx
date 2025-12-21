@@ -10,6 +10,7 @@ import PatientDashboard from '@/features/patient/pages/PatientDashboard';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import SalesPage from '@/features/pharmacy/pages/SalesPage';
 import AlertsPage from '@/features/pharmacy/pages/AlertPage';
+import MedicalPassportPage from '@/features/patient/pages/MedicalPassportPage';
 
 function AppRoutes() {
   return (
@@ -65,7 +66,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/patient/passport"
+          element={
+            <ProtectedRoute allowedRoles={['PATIENT']}>
+              <MedicalPassportPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Web3Provider>
