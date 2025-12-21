@@ -8,7 +8,7 @@ import DoctorDashboard from '@/features/auth/pages/doctor/pages/DoctorDashboard'
 import PharmacyDashboard from '@/features/auth/pages/pharmacy/pages/PharmacyDashboard';
 import PatientDashboard from '@/features/auth/pages/patient/pages/PatientDashboard';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
-
+import SalesPage from '@/features/auth/pages/pharmacy/pages/SalesPage';
 
 function AppRoutes() {
   return (
@@ -16,7 +16,6 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<AuthPage />} />
-
         <Route
           path="/admin"
           element={
@@ -25,7 +24,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/doctor"
           element={
@@ -34,7 +32,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/pharmacist"
           element={
@@ -43,7 +40,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/pharmacy/sales"
+          element={
+            <ProtectedRoute allowedRoles={['PHARMACY']}>
+              <SalesPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/patient"
           element={

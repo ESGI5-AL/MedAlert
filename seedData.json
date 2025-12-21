@@ -17,6 +17,14 @@
     {
       "address": "0x64f98c25eb052b455599460bd418CB3e16FFC922",
       "name": "Denisa Pharmacy"
+    },
+    {
+      "address": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "name": "Pharmacies du Soleil"
+    },
+    {
+      "address": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "name": "Grande Pharmacie Lyon"
     }
   ],
 
@@ -28,6 +36,14 @@
     {
       "address": "0x2ed6C20297C16311b7ca07eDc11A6f16BCBB544C",
       "name": "Patient Sonia"
+    },
+    {
+      "address": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "name": "Elena Lena"
+    },
+    {
+      "address": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "name": "Emma Emmy"
     }
   ],
 

@@ -13,9 +13,10 @@ interface User {
 }
 
 interface NavigationLink {
-  to: string;
+  to?: string;
   label: string;
   icon: string;
+  isClickable?: boolean;
 }
 
 interface SidebarContextType {
@@ -131,13 +132,19 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children, role
 
   const getNavigationLinks = (): NavigationLink[] => {
     const roleSpecificLinks = [
-      { to: `/${role}`, label: 'Dashboard', icon: 'Home' }
+      { to: `/${role}`, label: 'Dashboard', icon: 'Home', isClickable: true }
     ];
 
-    const commonLinks = [
-      { to: '', label: 'Notifications', icon: 'Bell' },
-      { to: '', label: 'Paramètres', icon: 'Settings' }
-    ];
+    if (role === 'pharmacist') {
+      roleSpecificLinks.push(
+        { to: '/pharmacy/sales', label: 'Délivrances', icon: 'Pill', isClickable: true }
+      );
+    }
+
+    const commonLinks: NavigationLink[] = [
+    { label: 'Notifications', icon: 'Bell', isClickable: false },
+    { label: 'Paramètres', icon: 'Settings', isClickable: false }
+  ];
 
     return [...roleSpecificLinks, ...commonLinks];
   };
