@@ -111,13 +111,13 @@ export const SidebarComponent: React.FC = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* User Profile Footer */}
+      {/* User Profil Footer */}
       <SidebarFooter className="border-t bg-gray-50/50">
         {user ? (
           <div className={`space-y-2 ${isCollapsed ? 'p-2' : 'p-3'}`}>
             {/* User Info */}
             <Link 
-              to="/profile"
+              to="/profil"
               className={`flex items-center rounded-md hover:bg-accent transition-colors cursor-pointer ${
                 isCollapsed ? 'justify-center py-2' : 'gap-3 p-2'
               }`}

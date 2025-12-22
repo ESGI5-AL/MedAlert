@@ -13,7 +13,7 @@ import { useWeb3 } from '@/contexts/Web3Context';
 import { useSidebarContext } from '@/shared/contexts/SidebarContext';
 import { useNavigate } from 'react-router-dom';
 
-const ProfileContent: React.FC = () => {
+const ProfilContent: React.FC = () => {
   const { medAlertContract, account } = useWeb3();
   const { user, getUserInitials } = useSidebarContext();
   const navigate = useNavigate();
@@ -181,7 +181,7 @@ const ProfileContent: React.FC = () => {
   );
 };
 
-const ProfilePage: React.FC = () => {
+const ProfilPage: React.FC = () => {
   const { role: web3Role } = useWeb3();
 
   // On convertit le rôle pour la Sidebar
@@ -197,11 +197,11 @@ const ProfilePage: React.FC = () => {
   return (
     <SidebarLayout 
       role={currentRole} 
-      breadcrumbs={[{ label: 'Paramètres', href: '/profile' }]}
+      breadcrumbs={[{ label: 'Paramètres', href: '/profil' }]}
     >
-      <ProfileContent />
+      <ProfilContent />
     </SidebarLayout>
   );
 };
 
-export default ProfilePage;
+export default ProfilPage;

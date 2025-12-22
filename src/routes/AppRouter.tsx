@@ -11,7 +11,7 @@ import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import SalesPage from '@/features/pharmacy/pages/SalesPage';
 import AlertsPage from '@/features/pharmacy/pages/AlertPage';
 import MedicalPassportPage from '@/features/patient/pages/MedicalPassportPage';
-import ProfilePage from '@/features/profile/pages/profilePage';
+import ProfilPage from '@/features/profil/pages/profilPage';
 
 function AppRoutes() {
   return (
@@ -76,10 +76,10 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/profile"
+          path="/profil"
           element={
             <ProtectedRoute allowedRoles={['PATIENT', 'DOCTOR', 'PHARMACY', 'ADMIN']}>
-              <ProfilePage />
+              <ProfilPage />
             </ProtectedRoute>
           }
         />
