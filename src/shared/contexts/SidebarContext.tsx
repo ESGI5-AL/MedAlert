@@ -142,9 +142,16 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children, role
       );
     }
 
-     if (role === 'patient') {
+    if (role === 'patient') {
       roleSpecificLinks.push(
         { to: '/patient/passport', label: 'Passeport Médical', icon: 'Fingerprint', isClickable: true }
+      );
+    }
+
+    if (role === 'doctor') {
+      roleSpecificLinks.push(
+        { to: '/doctor/reports', label: 'Signalements', icon: 'Pill', isClickable: true },
+        { to: '/doctor/alerts', label: 'Alertes', icon: 'TriangleAlert', isClickable: true }
       );
     }
 
