@@ -15,7 +15,7 @@ export interface Registration$Type {
   readonly deployedLinkReferences: {};
   readonly immutableReferences: {};
   readonly inputSourceName: "project/contracts/Registration.sol";
-  readonly buildInfoId: "solc-0_8_28-8fa41f4477484677c1f93fd3722954a90c07b9af";
+  readonly buildInfoId: "solc-0_8_28-7747cc9004f0383bde5c72caf980e6b3c9dd83ab";
 };
 
 import "hardhat/types/artifacts";

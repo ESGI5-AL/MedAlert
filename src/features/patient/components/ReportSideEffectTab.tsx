@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { AlertCircle, FileText, Loader2 } from 'lucide-react';
+import { AlertCircle, FileText, Loader2, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useWeb3 } from '@/contexts/Web3Context';
 import type { MedicineRecord } from '../types/patient.types';
@@ -29,6 +29,7 @@ export const ReportSideEffectTab: React.FC<ReportSideEffectTabProps> = ({
   const [selectedMedicineId, setSelectedMedicineId] = useState('');
   const [symptom, setSymptom] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [justSubmitted, setJustSubmitted] = useState(false);
 
   const [errors, setErrors] = useState({
     medicine: '',
@@ -76,6 +77,7 @@ export const ReportSideEffectTab: React.FC<ReportSideEffectTabProps> = ({
     }
 
     setIsSubmitting(true);
+    setJustSubmitted(false);
 
     try {
       const tx = await medAlertContract.reportSideEffect(
@@ -85,13 +87,20 @@ export const ReportSideEffectTab: React.FC<ReportSideEffectTabProps> = ({
 
       toast.info('Transaction soumise. En attente de confirmation...');
 
+      await tx.wait();
+
       toast.success('Effet secondaire signalé avec succès!');
 
       setSelectedMedicineId('');
       setSymptom('');
       setErrors({ medicine: '', symptom: '' });
+      setJustSubmitted(true);
 
       onReportSubmitted();
+
+      setTimeout(() => {
+        setJustSubmitted(false);
+      }, 5000);
 
     } catch (error: any) {
       console.error('Error reporting side effect:', error);
@@ -103,6 +112,8 @@ export const ReportSideEffectTab: React.FC<ReportSideEffectTabProps> = ({
       } else if (error.message) {
         if (error.message.includes('You don\'t have this medicine')) {
           errorMessage = 'Vous ne possédez pas ce médicament';
+        } else if (error.message.includes('user rejected')) {
+          errorMessage = 'Transaction annulée';
         } else {
           errorMessage = error.message;
         }
@@ -130,6 +141,25 @@ export const ReportSideEffectTab: React.FC<ReportSideEffectTabProps> = ({
 
   return (
     <div className="space-y-6">
+      {justSubmitted && (
+        <Card className="border-green-200 bg-green-50 dark:bg-green-950">
+          <CardContent className="pt-6">
+            <div className="flex gap-4">
+              <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">
+                  Signalement enregistré avec succès!
+                </h3>
+                <p className="text-sm text-green-800 dark:text-green-200">
+                  Votre signalement a été enregistré sur la blockchain. Un médecin va l'examiner et le valider prochainement.
+                  Vous pouvez consulter vos signalements dans l'onglet "Mes signalements".
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950">
         <CardContent className="pt-6">
           <div className="flex gap-4">
@@ -178,6 +208,9 @@ export const ReportSideEffectTab: React.FC<ReportSideEffectTabProps> = ({
                         <span className="font-medium">{medicine.medicineName}</span>
                         <span className="text-xs text-muted-foreground">
                           ID: {medicine.medicineId}
+                          {medicine.hasAlerts && (
+                            <span className="ml-2 text-red-500">⚠️ Alerte active</span>
+                          )}
                         </span>
                       </div>
                     </SelectItem>

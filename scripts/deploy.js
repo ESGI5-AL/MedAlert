@@ -142,7 +142,7 @@ async function main() {
   } else if (!isLocal) {
     console.log("Skipping medicine seeding: onlyPharmacy requires using real pharmacy keys on non-local networks.");
   } else {
-    const pharmacyAddr = pharmacies[0];
+    const pharmacyAddr = pharmacies[2];
     console.log("Impersonating pharmacy for seeding medicines:", pharmacyAddr);
 
     const { signer: pharmacySigner, stop } = await impersonate(connection, ethers, pharmacyAddr);

@@ -41,7 +41,7 @@ contract MedAlert {
     mapping(address => mapping(string => bool)) public patientHasMedicine;
 
     //EVENEMENTS
-    event MedicineAdded(address indexed patientAddress, string medicineId, string medicineName, uint256 quantity);
+    event MedicineAdded(address indexed pharmacyAddress, address indexed patientAddress, string medicineId, string medicineName, uint256 quantity);
     event SideEffectReported(uint256 indexed reportId, address indexed patientAddress, string medicineId);
     event SideEffectValidated(uint256 indexed reportId, address indexed doctorAddress, uint8 severity);
     event AlertTriggered(string indexed medicineId, uint256 alertCount);
@@ -99,7 +99,7 @@ contract MedAlert {
         medicineHistory[_patientAddress].push(newMedicine);
         patientHasMedicine[_patientAddress][_medicineId] = true;
 
-        emit MedicineAdded(_patientAddress, _medicineId, _medicineName, _quantity);
+        emit MedicineAdded(msg.sender, _patientAddress, _medicineId, _medicineName, _quantity);
     }
 
     //PATIENTS
@@ -155,16 +155,17 @@ contract MedAlert {
     //ALERTES
     function _checkAndTriggerAlert(string memory _medicineId) internal {
         uint256[] memory reports = sideEffectsByMedicine[_medicineId];
-        uint256 validatedCount = 0;
+        uint256 validatedModerateCount = 0;
 
         for (uint i = 0; i < reports.length; i++) {
-            if (sideEffects[reports[i]].isValidated) {
-                validatedCount++;
+            SideEffect memory report = sideEffects[reports[i]];
+            if (report.isValidated && report.severity >= 5) {
+                validatedModerateCount++;
             }
         }
 
-        if (validatedCount >= ALERT_THRESHOLD) {
-            _triggerAlert(_medicineId, validatedCount);
+        if (validatedModerateCount >= ALERT_THRESHOLD) {
+            _triggerAlert(_medicineId, validatedModerateCount);
         }
     }
 

@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { useWeb3 } from "@/contexts/Web3Context";
 import { toast } from "sonner";
-import seedData from "../../../../seedData.json";
 import type { SideEffectReport } from "../types/doctor.types";
 import { ValidationModal } from "../components/ValidationModal";
 import { EmptyState } from "../components/EmptyState";
@@ -39,26 +38,22 @@ const ReportsPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const formatReportData = (rawId: number, d: any): SideEffectReport => {
-    const medInfo = seedData.medicines.find((m) => m.medicineId === d[2]);
-
-    return {
-      id: rawId,
-      patientAddress: d[1],
-      medicineId: d[2],
-      medicineName: medInfo ? medInfo.name : d[2],
-      symptom: d[3],
-      date: new Date(Number(d[4]) * 1000),
-      severity: Number(d[7]),
-      isValidated: d[5],
-      validatedBy: d[6] || "",
-    };
-  };
-
   const fetchReports = async () => {
     if (!medAlertContract || !account) return;
     setLoading(true);
     try {
+      const medicineFilter = medAlertContract.filters.MedicineAdded();
+      const medicineEvents = await medAlertContract.queryFilter(medicineFilter, 0, "latest");
+
+      const medicineNames = new Map<string, string>();
+      for (const event of medicineEvents) {
+        if (!('args' in event)) continue;
+        const args = event.args;
+        if (!medicineNames.has(args.medicineId)) {
+          medicineNames.set(args.medicineId, args.medicineName);
+        }
+      }
+
       const filter = medAlertContract.filters.SideEffectReported();
       const events = await medAlertContract.queryFilter(filter, 0, "latest");
 
@@ -66,10 +61,28 @@ const ReportsPage: React.FC = () => {
       const history: SideEffectReport[] = [];
 
       for (const event of events) {
-        if ("args" in event) {
-          const id = Number((event as any).args[0]);
-          const rawData = await medAlertContract.getSideEffectDetails(id);
-          const report = formatReportData(id, rawData);
+        if (!('args' in event)) {
+          continue;
+        }
+
+        const args = event.args;
+        const reportId = Number(args.reportId);
+
+        try {
+          const rawData = await medAlertContract.getSideEffectDetails(reportId);
+          const medicineName = medicineNames.get(rawData.medicineId) || rawData.medicineId;
+
+          const report: SideEffectReport = {
+            id: reportId,
+            patientAddress: rawData.patientAddress,
+            medicineId: rawData.medicineId,
+            medicineName: medicineName,
+            symptom: rawData.symptom,
+            date: new Date(Number(rawData.reportDate) * 1000),
+            severity: Number(rawData.severity),
+            isValidated: rawData.isValidated,
+            validatedBy: rawData.validatedByDoctor || "",
+          };
 
           if (!report.isValidated) {
             pending.push(report);
@@ -82,14 +95,16 @@ const ReportsPage: React.FC = () => {
               history.push(report);
             }
           }
+        } catch (err) {
+          console.error(`Error fetching report ${reportId}:`, err);
         }
       }
+
       setPendingReports(
         pending.sort((a, b) => b.date.getTime() - a.date.getTime())
       );
       setMyHistory(history.sort((a, b) => b.date.getTime() - a.date.getTime()));
     } catch (e) {
-      console.error("Erreur fetch:", e);
       toast.error("Synchro échouée");
     } finally {
       setLoading(false);
@@ -125,6 +140,8 @@ const ReportsPage: React.FC = () => {
       await tx.wait();
       toast.success("Validé avec succès !");
       setIsModalOpen(false);
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
       fetchReports();
     } catch (e) {
       console.error(e);
@@ -182,7 +199,7 @@ const ReportsPage: React.FC = () => {
               <TabsTrigger
                 value="pending"
                 className="
-                            rounded-lg py-2.5 text-sm font-medium text-muted-foreground transition-all 
+                            rounded-lg py-2.5 text-sm font-medium text-muted-foreground transition-all
                             data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm
                             flex items-center justify-center gap-2
                         "
@@ -198,11 +215,17 @@ const ReportsPage: React.FC = () => {
               <TabsTrigger
                 value="history"
                 className="
-                            rounded-lg py-2.5 text-sm font-medium text-muted-foreground transition-all 
+                            rounded-lg py-2.5 text-sm font-medium text-muted-foreground transition-all
                             data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm
+                            flex items-center justify-center gap-2
                         "
               >
                 Historique
+                {myHistory.length > 0 && (
+                  <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-[10px] font-bold text-gray-600">
+                    {myHistory.length}
+                  </span>
+                )}
               </TabsTrigger>
             </TabsList>
           </div>
@@ -301,7 +324,7 @@ const ReportsPage: React.FC = () => {
                   {filteredHistory.length === 0 ? (
                     <EmptyState
                       title="Historique vide"
-                      message="Aucune validation trouvée pour cette recherche."
+                      message="Aucune validation effectuée par vous pour le moment."
                     />
                   ) : (
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

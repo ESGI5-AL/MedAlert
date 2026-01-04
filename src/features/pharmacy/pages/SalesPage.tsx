@@ -25,34 +25,34 @@ const SalesPage: React.FC = () => {
     try {
       setIsRefreshing(true);
 
-      const filter = medAlertContract.filters.MedicineAdded();
+      const filter = medAlertContract.filters.MedicineAdded(account);
       const events = await medAlertContract.queryFilter(filter, 0, 'latest');
+
       const salesData: SaleRecord[] = [];
 
       for (const event of events) {
-        const tx = await event.getTransaction();
+        const block = await event.getBlock();
 
-        if (tx.from.toLowerCase() === account.toLowerCase()) {
-          const block = await event.getBlock();
-
-          if (!('args' in event)) continue;
-          const args = event.args;
-
-          salesData.push({
-            patientAddress: args.patientAddress,
-            medicineId: args.medicineId,
-            medicineName: args.medicineName,
-            quantity: Number(args[3]),
-            timestamp: block.timestamp,
-            transactionHash: event.transactionHash,
-            blockNumber: event.blockNumber,
-          });
+        if (!('args' in event)) {
+          continue;
         }
+
+        const args = event.args;
+
+        salesData.push({
+          patientAddress: args.patientAddress,
+          medicineId: args.medicineId,
+          medicineName: args.medicineName,
+          quantity: Number(args.quantity),
+          timestamp: block.timestamp,
+          transactionHash: event.transactionHash,
+          blockNumber: event.blockNumber,
+        });
       }
 
       salesData.sort((a, b) => b.timestamp - a.timestamp);
-
       setSales(salesData);
+
     } catch (error) {
       console.error('Error fetching sales:', error);
       toast.error('Erreur lors du chargement des délivrances');

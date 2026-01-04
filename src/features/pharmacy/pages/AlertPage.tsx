@@ -7,7 +7,6 @@ import { useWeb3 } from '@/contexts/Web3Context';
 import { AlertCard } from '../components/AlertCard';
 import type { MedicineWithAlerts, SideEffectDetail } from '../types/alerts.types';
 import { toast } from 'sonner';
-import seedData from '../../../../seedData.json';
 
 const AlertsPage: React.FC = () => {
   const { medAlertContract, account } = useWeb3();
@@ -29,15 +28,38 @@ const AlertsPage: React.FC = () => {
       const threshold = await medAlertContract.getAlertThreshold();
       setAlertThreshold(Number(threshold));
 
+      const medicineFilter = medAlertContract.filters.MedicineAdded();
+      const medicineEvents = await medAlertContract.queryFilter(medicineFilter, 0, 'latest');
+
+      const medicineNames = new Map<string, string>();
+      for (const event of medicineEvents) {
+        if (!('args' in event)) continue;
+        const args = event.args;
+
+        if (!medicineNames.has(args.medicineId)) {
+          medicineNames.set(args.medicineId, args.medicineName);
+        }
+      }
+
       const alertFilter = medAlertContract.filters.AlertTriggered();
       const alertEvents = await medAlertContract.queryFilter(alertFilter, 0, 'latest');
 
+      const alertedMedicineIds = new Set<string>();
+      for (const event of alertEvents) {
+        if ('args' in event && event.args) {
+          alertedMedicineIds.add(event.args.medicineId || event.args[0]);
+        }
+      }
+
       const medicinesData: MedicineWithAlerts[] = [];
 
-      for (const medicine of seedData.medicines) {
+      for (const [medicineId, medicineName] of medicineNames.entries()) {
         try {
-          const reportIds = await medAlertContract.getSideEffectsByMedicine(medicine.medicineId);
-          const validatedCount = await medAlertContract.getValidatedReportCount(medicine.medicineId);
+          const reportIds = await medAlertContract.getSideEffectsByMedicine(medicineId);
+
+          if (reportIds.length === 0) continue;
+
+          const validatedCount = await medAlertContract.getValidatedReportCount(medicineId);
           const sideEffects: SideEffectDetail[] = [];
 
           for (const reportId of reportIds) {
@@ -60,25 +82,18 @@ const AlertsPage: React.FC = () => {
             }
           }
 
-          const hasAlert = alertEvents.some(event => {
-            if ('args' in event && event.args) {
-              return event.args[0] === medicine.medicineId;
-            }
-            return false;
-          });
+          const hasAlert = alertedMedicineIds.has(medicineId);
 
-          if (reportIds.length > 0) {
-            medicinesData.push({
-              medicineId: medicine.medicineId,
-              medicineName: medicine.name,
-              totalReports: reportIds.length,
-              validatedReports: Number(validatedCount),
-              hasAlert,
-              sideEffects: sideEffects.sort((a, b) => b.reportDate - a.reportDate),
-            });
-          }
+          medicinesData.push({
+            medicineId: medicineId,
+            medicineName: medicineName,
+            totalReports: reportIds.length,
+            validatedReports: Number(validatedCount),
+            hasAlert,
+            sideEffects: sideEffects.sort((a, b) => b.reportDate - a.reportDate),
+          });
         } catch (err) {
-          console.error(`Error processing medicine ${medicine.medicineId}:`, err);
+          console.error(`Error processing medicine ${medicineId}:`, err);
         }
       }
 
@@ -140,7 +155,7 @@ const AlertsPage: React.FC = () => {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Alertes médicaments</h2>
             <p className="text-muted-foreground">
-              Surveillance des effets secondaires signalés
+              Surveillance des effets secondaires signalés (tous les médicaments)
             </p>
           </div>
           <Button
@@ -213,7 +228,7 @@ const AlertsPage: React.FC = () => {
               <ShieldAlert className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold mb-2">Aucun signalement</h3>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Aucun effet secondaire n'a été signalé pour les médicaments que vous avez délivrés.
+                Aucun effet secondaire n'a été signalé pour l'instant.
               </p>
             </CardContent>
           </Card>

@@ -1,17 +1,22 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
-import { FileText, Calendar, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Button } from '@/shared/components/ui/button';
+import { FileText, Calendar, CheckCircle, Clock, AlertTriangle, RefreshCw } from 'lucide-react';
 import type { PatientSideEffectReport } from '../types/patient.types';
 
 interface MyReportsTabProps {
   reports: PatientSideEffectReport[];
   isLoading: boolean;
+  onRefresh: () => void;
+  isRefreshing: boolean;
 }
 
 export const MyReportsTab: React.FC<MyReportsTabProps> = ({
   reports,
   isLoading,
+  onRefresh,
+  isRefreshing,
 }) => {
   const formatDate = (timestamp: number): string => {
     return new Date(timestamp * 1000).toLocaleDateString('fr-FR', {
@@ -58,10 +63,19 @@ export const MyReportsTab: React.FC<MyReportsTabProps> = ({
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
           <FileText className="h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold mb-2">Aucun signalement</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Vous n'avez pas encore signalé d'effet secondaire. Utilisez l'onglet "Signaler un effet secondaire"
+          <p className="text-sm text-muted-foreground max-w-sm mb-4">
+            Vous n'avez pas encore signalé d'effet secondaire. Utilisez l'onglet "Signaler"
             si vous ressentez des symptômes inhabituels.
           </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onRefresh}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Actualiser
+          </Button>
         </CardContent>
       </Card>
     );
@@ -72,6 +86,21 @@ export const MyReportsTab: React.FC<MyReportsTabProps> = ({
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">
+          Mes signalements ({reports.length})
+        </h3>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onRefresh}
+          disabled={isRefreshing}
+        >
+          <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          Actualiser
+        </Button>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

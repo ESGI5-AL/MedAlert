@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { SidebarLayout } from '@/shared/layouts/Sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { FileHeart, Pill, FileText, AlertCircle } from 'lucide-react';
+import { FileHeart, Pill, FileText, AlertCircle, RefreshCw } from 'lucide-react';
+import { Button } from '@/shared/components/ui/button';
 import { useWeb3 } from '@/contexts/Web3Context';
 import { MedicineHistoryTab } from '../components/MedicineHistoryTab';
 import { ReportSideEffectTab } from '../components/ReportSideEffectTab';
 import { MyReportsTab } from '../components/MyReportsTab';
 import type { MedicineRecord, PatientSideEffectReport } from '../types/patient.types';
 import { toast } from 'sonner';
-import seedData from '../../../../seedData.json';
 
 const MedicalPassportPage: React.FC = () => {
   const { medAlertContract, account } = useWeb3();
@@ -17,6 +17,7 @@ const MedicalPassportPage: React.FC = () => {
   const [reports, setReports] = useState<PatientSideEffectReport[]>([]);
   const [activeAlerts, setActiveAlerts] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchMedicineHistory = async () => {
     if (!medAlertContract || !account) {
@@ -26,7 +27,6 @@ const MedicalPassportPage: React.FC = () => {
 
     try {
       const medicineHistory = await medAlertContract.getMyMedicineHistory();
-
       const alerts = await medAlertContract.getMyActiveAlerts();
 
       const medicineRecords: MedicineRecord[] = medicineHistory.map((med: any) => ({
@@ -58,20 +58,32 @@ const MedicalPassportPage: React.FC = () => {
 
       const reportsList: PatientSideEffectReport[] = [];
 
+      const medicineFilter = medAlertContract.filters.MedicineAdded();
+      const medicineEvents = await medAlertContract.queryFilter(medicineFilter, 0, 'latest');
+
+      const medicineNames = new Map<string, string>();
+      for (const event of medicineEvents) {
+        if (!('args' in event)) continue;
+        const args = event.args;
+        if (!medicineNames.has(args.medicineId)) {
+          medicineNames.set(args.medicineId, args.medicineName);
+        }
+      }
+
       for (const event of events) {
         try {
           if (!('args' in event)) continue;
           const args = event.args;
-          const reportId = Number(args[0]);
+          const reportId = Number(args.reportId);
 
           const reportDetails = await medAlertContract.getSideEffectDetails(reportId);
 
-          const medicine = seedData.medicines.find(m => m.medicineId === reportDetails.medicineId);
+          const medicineName = medicineNames.get(reportDetails.medicineId) || reportDetails.medicineId;
 
           reportsList.push({
             reportId: Number(reportDetails.reportId),
             medicineId: reportDetails.medicineId,
-            medicineName: medicine?.name || reportDetails.medicineId,
+            medicineName: medicineName,
             symptom: reportDetails.symptom,
             reportDate: Number(reportDetails.reportDate),
             isValidated: reportDetails.isValidated,
@@ -94,20 +106,28 @@ const MedicalPassportPage: React.FC = () => {
   };
 
   const fetchAllData = async () => {
-    setIsLoading(true);
+    setIsRefreshing(true);
     await Promise.all([
       fetchMedicineHistory(),
       fetchMyReports(),
     ]);
     setIsLoading(false);
+    setIsRefreshing(false);
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchAllData();
   }, [medAlertContract, account]);
 
-  const handleReportSubmitted = () => {
+  const handleReportSubmitted = async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await fetchAllData();
+  };
+
+  const handleRefresh = () => {
     fetchAllData();
+    toast.success('Données actualisées');
   };
 
   return (
@@ -119,14 +139,24 @@ const MedicalPassportPage: React.FC = () => {
       ]}
     >
       <div className="space-y-6">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <FileHeart className="h-8 w-8 text-primary" />
-            <h2 className="text-2xl font-bold tracking-tight">Passeport Médical</h2>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <FileHeart className="h-8 w-8 text-primary" />
+              <h2 className="text-2xl font-bold tracking-tight">Passeport Médical</h2>
+            </div>
+            <p className="text-muted-foreground">
+              Consultez votre historique de médicaments et signalez des effets secondaires
+            </p>
           </div>
-          <p className="text-muted-foreground">
-            Consultez votre historique de médicaments et signalez des effets secondaires
-          </p>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </Button>
         </div>
 
         <Tabs defaultValue="history" className="space-y-4">
@@ -168,6 +198,8 @@ const MedicalPassportPage: React.FC = () => {
             <MyReportsTab
               reports={reports}
               isLoading={isLoading}
+              onRefresh={handleRefresh}
+              isRefreshing={isRefreshing}
             />
           </TabsContent>
         </Tabs>

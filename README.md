@@ -2,14 +2,12 @@
 
 Un réseau d'alerte décentralisé en temps réel pour les effets secondaires des médicaments, combinant blockchain et santé publique pour sauver des vies grâce à la transparence.
 
----
 
 
 ## Vue d'ensemble du projet
 
 MedAlert est une plateforme révolutionnaire de pharmacovigilance qui exploite la technologie blockchain pour créer un système de surveillance de la sécurité des médicaments transparent, immuable et centré sur le patient. En combinant la puissance de la blockchain avec l'expertise médicale, MedAlert répond aux défaillances critiques des systèmes de pharmacovigilance centralisés actuels.
 
----
 
 ## Le problème
 
@@ -22,7 +20,6 @@ Les systèmes actuels de surveillance des médicaments présentent des défailla
 
 **Résultat** : Des milliers de vies menacées par l'opacité des systèmes actuels de pharmacovigilance.
 
----
 
 ## Notre solution
 
@@ -40,9 +37,8 @@ Réseau de médecins certifiés validant les rapports via des smart contracts tr
 ### 4. Alertes instantanées
 Notification immédiate de tous les patients affectés lorsqu'un seuil critique est atteint.
 
----
 
-## 👥 Équipe
+## Équipe
 
 **Promotion 5AL1**
 
@@ -51,7 +47,6 @@ Notification immédiate de tous les patients affectés lorsqu'un seuil critique 
 - ALOUI Sonia
 - CHABANE Celina
 
----
 
 ## Installation et démarrage
 
@@ -75,7 +70,6 @@ npm start
 
 Le projet sera accessible à l'adresse : `http://localhost:3000`
 
----
 
 ## Utilisation des composants shadcn/ui
 
@@ -93,7 +87,6 @@ npx shadcn@latest add breadcrumb
 
 Consultez la documentation complète : [https://ui.shadcn.com/docs/installation](https://ui.shadcn.com/docs/installation)
 
----
 
 ## Technologies utilisées
 
@@ -108,24 +101,31 @@ Consultez la documentation complète : [https://ui.shadcn.com/docs/installation]
 - **Lucide React** - Icônes
 
 ### Blockchain
-
+[![Hardhat][Hardhat]][Hardhat-url]
+[![Ethers][Ethers.js]][Ethers-url]
+[![Solidity][Solidity]][Solidity-url]
 - **Hardhat 3** - Environnement de développement Ethereum
 - **Ethers v6** - Bibliothèque JavaScript pour interagir avec Ethereum
 - **Solidity 0.8.x** - Langage de programmation pour smart contracts
 
+[Hardhat]: https://img.shields.io/badge/Hardhat-FFF100?style=for-the-badge&logo=hardhat&logoColor=black
+[Hardhat-url]: https://hardhat.org/
+[Ethers.js]: https://img.shields.io/badge/Ethers.js-2535A0?style=for-the-badge&logo=ethereum&logoColor=white
+[Ethers-url]: https://docs.ethers.org/
+[Solidity]: https://img.shields.io/badge/Solidity-363636?style=for-the-badge&logo=solidity&logoColor=white
+[Solidity-url]: https://soliditylang.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Tailwind.css]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
 [Tailwind-url]: https://tailwindcss.com/
 
----
 
 ## Déploiement des Smart Contracts
 
 ### Contrats
 
 | Contrat | Objectif |
-|---------|----------|
+-|
 | `Registration.sol` | Gestion des rôles (médecins, pharmacies, patients) |
 | `MedAlert.sol` | Logique d'alerte médicale (médicaments, seuils, signalement d'effets secondaires) |
 
@@ -135,7 +135,7 @@ Consultez la documentation complète : [https://ui.shadcn.com/docs/installation]
 ### Fichiers clés
 
 | Fichier | Objectif |
-|---------|----------|
+-|
 | `scripts/deploy.js` | Déploie les contrats et initialise les données |
 | `seedData.json` | État initial (médecins, pharmacies, médicaments, paramètres) |
 | `deployments.localhost.json` | Informations de déploiement auto-générées |
@@ -194,5 +194,4 @@ Default RPC URL : 127.0.0.1:8545 <br>
 Chain id: 31337 <br>
 Currency: ETH <br>
 
----
 

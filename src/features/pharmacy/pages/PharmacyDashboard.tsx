@@ -37,7 +37,7 @@ const PharmacyDashboard: React.FC = () => {
     }
 
     try {
-      const filter = medAlertContract.filters.MedicineAdded();
+      const filter = medAlertContract.filters.MedicineAdded(account);
       const events = await medAlertContract.queryFilter(filter, 0, 'latest');
 
       const pharmacySales: SaleRecord[] = [];
@@ -51,33 +51,30 @@ const PharmacyDashboard: React.FC = () => {
 
       for (const event of events) {
         try {
-          const tx = await event.getTransaction();
+          const block = await event.getBlock();
 
-          if (tx.from.toLowerCase() === account.toLowerCase()) {
-            const block = await event.getBlock();
-            const eventLog = event as any;
-            const args = eventLog.args;
+          if (!('args' in event)) continue;
 
-            const quantity = Number(args[3]);
-            const timestamp = Number(block.timestamp);
+          const args = event.args;
 
-            pharmacySales.push({
-              patientAddress: args[0] as string,
-              medicineId: args[1] as string,
-              medicineName: args[2] as string,
-              quantity: quantity,
-              timestamp: timestamp,
-              transactionHash: event.transactionHash,
-              blockNumber: event.blockNumber,
-            });
+          const quantity = Number(args.quantity);
+          const timestamp = Number(block.timestamp);
 
-            patientSet.add((args[0] as string).toLowerCase());
+          pharmacySales.push({
+            patientAddress: args.patientAddress,
+            medicineId: args.medicineId,
+            medicineName: args.medicineName,
+            quantity: quantity,
+            timestamp: timestamp,
+            transactionHash: event.transactionHash,
+            blockNumber: event.blockNumber,
+          });
 
-            totalQuantity += quantity;
+          patientSet.add(args.patientAddress.toLowerCase());
+          totalQuantity += quantity;
 
-            if (timestamp >= todayStart) {
-              deliveriesToday++;
-            }
+          if (timestamp >= todayStart) {
+            deliveriesToday++;
           }
         } catch (err) {
           console.error('Error processing event:', err);
@@ -91,10 +88,10 @@ const PharmacyDashboard: React.FC = () => {
 
       const alertedMedicines = new Set<string>();
       for (const event of alertEvents) {
-        const eventLog = event as any;
-        const args = eventLog.args;
-        if (args && args[0]) {
-          alertedMedicines.add(args[0] as string);
+        if (!('args' in event)) continue;
+        const args = event.args;
+        if (args && args.medicineId) {
+          alertedMedicines.add(args.medicineId);
         }
       }
 
