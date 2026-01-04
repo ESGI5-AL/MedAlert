@@ -11,6 +11,9 @@ import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import SalesPage from '@/features/pharmacy/pages/SalesPage';
 import AlertsPage from '@/features/pharmacy/pages/AlertPage';
 import MedicalPassportPage from '@/features/patient/pages/MedicalPassportPage';
+import ProfilPage from '@/features/profil/pages/profilPage';
+import ReportsPage from '@/features/doctor/pages/ReportsPage';
+import AlertsPageDoctor from '@/features/doctor/pages/AlertsPage';
 
 function AppRoutes() {
   return (
@@ -31,6 +34,22 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['DOCTOR']}>
               <DoctorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/doctor/reports"
+          element={
+            <ProtectedRoute allowedRoles={['DOCTOR']}>
+              <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/doctor/alerts"
+          element={
+            <ProtectedRoute allowedRoles={['DOCTOR']}>
+              <AlertsPageDoctor />
             </ProtectedRoute>
           }
         />
@@ -71,6 +90,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['PATIENT']}>
               <MedicalPassportPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profil"
+          element={
+            <ProtectedRoute allowedRoles={['PATIENT', 'DOCTOR', 'PHARMACY', 'ADMIN']}>
+              <ProfilPage />
             </ProtectedRoute>
           }
         />

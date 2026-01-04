@@ -111,19 +111,25 @@ export const SidebarComponent: React.FC = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* User Profile Footer */}
+      {/* User Profil Footer */}
       <SidebarFooter className="border-t bg-gray-50/50">
         {user ? (
           <div className={`space-y-2 ${isCollapsed ? 'p-2' : 'p-3'}`}>
             {/* User Info */}
-            <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
-              <Avatar className="h-9 w-9 flex-shrink-0">
+            <Link 
+              to="/profil"
+              className={`flex items-center rounded-md hover:bg-accent transition-colors cursor-pointer ${
+                isCollapsed ? 'justify-center py-2' : 'gap-3 p-2'
+              }`}
+            >
+              <Avatar className="h-9 w-9 flex-shrink-0 border border-border">
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
+              
               {!isCollapsed && (
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 text-left">
                   <p className="text-sm font-medium truncate">
                     {getUserName()}
                   </p>
@@ -134,7 +140,7 @@ export const SidebarComponent: React.FC = () => {
                   )}
                 </div>
               )}
-            </div>
+            </Link>
 
             {/* Disconnect Button */}
             <Button
